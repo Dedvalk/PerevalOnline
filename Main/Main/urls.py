@@ -21,10 +21,13 @@ from rest_framework import routers
 from PerevalApp.views import PerevalViewset
 
 
+#router = routers.DefaultRouter()
+#router.register(r'submitData', PerevalViewset)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/perevals', PerevalViewset.as_view({'get': 'list'})),
+    #path('api/v1/perevals', PerevalViewset.as_view({'get': 'list'})),
+    path('api/v1/submitData', PerevalViewset.as_view()),
 ]
 
 '''
