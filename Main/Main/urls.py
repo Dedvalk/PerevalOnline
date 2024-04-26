@@ -15,8 +15,31 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
+
+from PerevalApp.views import PerevalViewset
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/perevals', PerevalViewset.as_view({'get': 'list'})),
 ]
+
+'''
+Метод submitData принимает JSON в теле запроса с информацией о перевале.
+status — код HTTP, целое число:
+500 — ошибка при выполнении операции;
+400 — Bad Request (при нехватке полей);
+200 — успех.
+message — строка:
+Причина ошибки (если она была);
+Отправлено успешно;
+Если отправка успешна, дополнительно возвращается id вставленной записи.
+id — идентификатор, который был присвоен объекту при добавлении в базу данных.
+Примеры:
+
+{ "status": 500, "message": "Ошибка подключения к базе данных","id": null}
+{ "status": 200, "message": null, "id": 42 }
+'''
