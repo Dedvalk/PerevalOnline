@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 
-from PerevalApp.views import PerevalViewset, PerevalViewset1
+from PerevalApp.views import PerevalViewset
 
 
 router = routers.DefaultRouter()
@@ -26,24 +26,5 @@ router.register(r'submitData', PerevalViewset)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #path('api/v1/perevals', PerevalViewset1.as_view({'get': 'list'})),
-    #path('api/v1/submitData', PerevalViewset.as_view()),
     path('api/v1/', include(router.urls)),
 ]
-
-'''
-Метод submitData принимает JSON в теле запроса с информацией о перевале.
-status — код HTTP, целое число:
-500 — ошибка при выполнении операции;
-400 — Bad Request (при нехватке полей);
-200 — успех.
-message — строка:
-Причина ошибки (если она была);
-Отправлено успешно;
-Если отправка успешна, дополнительно возвращается id вставленной записи.
-id — идентификатор, который был присвоен объекту при добавлении в базу данных.
-Примеры:
-
-{ "status": 500, "message": "Ошибка подключения к базе данных","id": null}
-{ "status": 200, "message": null, "id": 42 }
-'''

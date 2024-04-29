@@ -6,12 +6,6 @@ from .models import Pereval, Coords
 from .serializers import PerevalSerializer, CoordsSerializer
 
 
-class PerevalViewset1(viewsets.ModelViewSet):
-
-    queryset = Pereval.objects.all()
-    serializer_class = PerevalSerializer
-
-
 class PerevalViewset(viewsets.ModelViewSet):
 
     queryset = Pereval.objects.all()
