@@ -18,16 +18,17 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 
-from PerevalApp.views import PerevalViewset
+from PerevalApp.views import PerevalViewset, PerevalViewset1
 
 
-#router = routers.DefaultRouter()
-#router.register(r'submitData', PerevalViewset)
+router = routers.DefaultRouter()
+router.register(r'submitData', PerevalViewset)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #path('api/v1/perevals', PerevalViewset.as_view({'get': 'list'})),
-    path('api/v1/submitData', PerevalViewset.as_view()),
+    #path('api/v1/perevals', PerevalViewset1.as_view({'get': 'list'})),
+    #path('api/v1/submitData', PerevalViewset.as_view()),
+    path('api/v1/', include(router.urls)),
 ]
 
 '''

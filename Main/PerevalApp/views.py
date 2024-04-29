@@ -6,7 +6,13 @@ from .models import Pereval, Coords
 from .serializers import PerevalSerializer, CoordsSerializer
 
 
-class PerevalViewset(CreateAPIView):
+class PerevalViewset1(viewsets.ModelViewSet):
+
+    queryset = Pereval.objects.all()
+    serializer_class = PerevalSerializer
+
+
+class PerevalViewset(viewsets.ModelViewSet):
 
     queryset = Pereval.objects.all()
     serializer_class = PerevalSerializer
@@ -17,27 +23,27 @@ class PerevalViewset(CreateAPIView):
             serializer.is_valid(raise_exception=True)
             instance = serializer.save()
             response_data = {
-                "status": 200,
-                "message": "Успешно отправлено.",
-                "id": instance.id
+                'status': status.HTTP_200_OK,
+                'message': 'Успешно отправлено.',
+                'id': instance.id
             }
-            return Response(response_data, status=status.HTTP_200_OK)
+            return Response(response_data)
 
         except ValidationError as e:
             response_data = {
-                "status": 400,
-                "message": e.detail,
-                "id": None
+                'status': status.HTTP_400_BAD_REQUEST,
+                'message': e.detail,
+                'id': None
             }
-            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
+            return Response(response_data)
 
         except Exception as e:
             response_data = {
-                "status": 500,
-                "message": str(e),
-                "id": None
+                'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
+                'message': str(e),
+                'id': None
             }
-            return Response(response_data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(response_data)
 
 class CoordsViewSet(viewsets.ModelViewSet):
 

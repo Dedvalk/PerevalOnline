@@ -3,9 +3,20 @@ from django.db import models
 
 COMPLEXITY = (
     ('', ''),
-    ('1A', '1A'),
+    ('1А', '1-А'),
+    ('2А', '2-А'),
+    ('3А', '3-А'),
+    ('1Б', '1-Б'),
+    ('1Б', '2-Б'),
+    ('1Б', '3-Б'),
 )
 
+STATUS = (
+        ("new", 'новый'),
+        ("pending", 'в обработке'),
+        ("accepted", 'принят'),
+        ("rejected", 'отклонен'),
+    )
 
 class Users(models.Model):
 
@@ -41,11 +52,12 @@ class Pereval(models.Model):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
     coords = models.OneToOneField(Coords, on_delete=models.CASCADE)
     level = models.ForeignKey(Levels, on_delete=models.CASCADE)
+    status = models.CharField(max_length=8, choices=STATUS, default='new')
 
 
 class Images(models.Model):
 
     title = models.CharField(max_length=255)
-    data = models.BinaryField()
+    data = models.ImageField(upload_to='images/')
     pereval = models.ForeignKey(Pereval, on_delete=models.CASCADE, related_name='images')
 
