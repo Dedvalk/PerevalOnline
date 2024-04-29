@@ -4,15 +4,17 @@ from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from .models import Pereval, Coords
 from .serializers import PerevalSerializer, CoordsSerializer
+from django_filters import rest_framework
 
 
 class PerevalViewset(viewsets.ModelViewSet):
 
     queryset = Pereval.objects.all()
     serializer_class = PerevalSerializer
-    filterset_fields = (
+    filter_backends = (rest_framework.DjangoFilterBackend,)
+    filterset_fields = [
         'user__email'
-    )
+    ]
 
     def create(self, request, *args, **kwargs):
         serializer = PerevalSerializer(data=request.data)
