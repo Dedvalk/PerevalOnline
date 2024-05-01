@@ -1,0 +1,275 @@
+openapi: 3.0.2
+info:
+  title: 'PerevalOnline OAPI'
+  version: "0.1"
+paths:
+  /api/v1/submitData:
+    get:
+      operationId: listPerevals
+      description: 'List of records'
+      parameters:
+        - in: query
+          name: user__email
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+          application/json:
+            schema:
+              type: array
+              items:
+                  $ref: '#/components/schemas/Pereval'
+          description: ''
+      tags:
+        - perevals
+
+    post:
+      operationId: createPereval
+      description: 'Submit new record'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pereval'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pereval'
+          description: ''
+      tags:
+        - perevals
+
+  /api/v1/submitData/{id}:
+    get:
+      operationId: getRecordById
+      description: 'Get record by id'
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: string
+          description: record id
+
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pereval'
+          description: ''
+      tags:
+        - perevals
+
+    patch:
+      operationId: changeRecordById
+      description: 'Change record by id'
+      parameters:
+        - in: body
+          required: true
+          name: data
+          schema:
+            $ref: '#/components/schemas/Pereval'
+
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: string
+          description: record id
+
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pereval'
+          description: ''
+      tags:
+        - perevals
+
+components:
+  schemas:
+    Pereval:
+      type: object
+      required:
+        - beauty_title
+        - title
+        - other_title
+        - connect
+        - user
+        - coords
+        - level
+        - images
+      properties:
+        status:
+          type: string
+          title: Статус записи
+          default: new
+          enum:
+            - new
+            - pending
+            - accepted
+            - rejected
+        beauty_title:
+          type: string
+          title: Тип
+          maxLength: 255
+          example: пер.
+        title:
+          type: string
+          title: Название
+          maxLength: 255
+          example: Пхия
+        other_title:
+          type: string
+          title: Альтернативное название
+          maxLength: 255
+          example: Триев
+        connect:
+          type: string
+          title: Что соединяет
+          nullable: true
+        user:
+          $ref: '#/components/schemas/User'
+        coords:
+          $ref: '#/components/schemas/Coords'
+        level:
+          $ref: '#/components/schemas/Level'
+        images:
+          $ref: '#/components/schemas/Images'
+
+    User:
+      type: object
+      required:
+        - e-mail
+        - fam
+        - name
+        - otc
+        - phone
+      properties:
+        e-mail:
+          type: string
+          format: email
+          title: Email
+          maxLength: 100
+          example: test@test.com
+        fam:
+          type: string
+          title: Фамилия
+          maxLength: 100
+          example: Пупкин
+        name:
+          type: string
+          title: Имя
+          maxLength: 100
+          example: Василий
+        otc:
+          type: string
+          title: Отчество
+          maxLength: 100
+          example: Иванович
+        phone:
+          type: string
+          title: Телефон
+          maxLength: 11
+          example: '75555555555'
+
+    Coords:
+      type: object
+      properties:
+        latitude:
+          type: number
+          format: float
+          title: Широта
+          maxLength: 20
+          example: 45.3842
+        longitude:
+          type: number
+          format: float
+          title: Долгота
+          maxLength: 20
+          example: 7.1525
+        height:
+          type: number
+          title: Высота
+          example: 1200
+
+    Level:
+      type: object
+      properties:
+        spring:
+          type: string
+          format: choices
+          enum:
+            - 1А
+            - 2А
+            - 3А
+            - 1Б
+            - 2Б
+            - 3Б
+          title: Весна
+          maxLength: 2
+          nullable: true
+        summer:
+          type: string
+          format: choices
+          enum:
+            - 1А
+            - 2А
+            - 3А
+            - 1Б
+            - 2Б
+            - 3Б
+          title: Лето
+          maxLength: 2
+          nullable: true
+        autumn:
+          type: string
+          format: choices
+          enum:
+            - 1А
+            - 2А
+            - 3А
+            - 1Б
+            - 2Б
+            - 3Б
+          title: Осень
+          maxLength: 2
+          nullable: true
+        winter:
+          type: string
+          format: choices
+          enum:
+            - 1А
+            - 2А
+            - 3А
+            - 1Б
+            - 2Б
+            - 3Б
+          title: Зима
+          maxLength: 2
+          nullable: true
+
+    Images:
+      type: object
+      properties:
+        title:
+          type: string
+          title: Название
+          maxLength: 255
+          nullable: true
+          example: Седловина
+        data:
+          type: string
+          format: uri
+          title: Ссылка на изображение
+          nullable: true
