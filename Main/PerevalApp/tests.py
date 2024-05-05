@@ -18,7 +18,6 @@ class SubmitDataTestCase(APITestCase):
             'otc': 'testuser1',
             'phone': '11111111111'
         }
-
         userdata2 = {
             'email': 'testuser2@test.com',
             'fam': 'testuser2',
@@ -26,31 +25,27 @@ class SubmitDataTestCase(APITestCase):
             'otc': 'testuser2',
             'phone': '22222222222'
         }
-
         perevaldata1 = {
             'title': 'pereval1',
             'beauty_title': 'pereval1',
             'other_titles': 'pereval1'
         }
-
         coordsdata = {
-            'latitude': '33.33',
-            'longitude': '33.33',
-            'height': '3333'
+            'latitude': '11.11',
+            'longitude': '11.11',
+            'height': '1111'
         }
-
         leveldata = {
             'spring': '1А',
             'summer': '',
             'autumn': '',
             'winter': '1Б'
         }
-
         testuser1 = Users.objects.create(**userdata1)
         testuser2 = Users.objects.create(**userdata2)
-        coords1 = Coords.objects.create(latitude=11.11, longitude=11.11, height=1111)
+        coords1 = Coords.objects.create(**coordsdata)
         coords2 = Coords.objects.create(latitude=22.22, longitude=22.22, height=2222)
-        coords3 = Coords.objects.create(**coordsdata)
+        coords3 = Coords.objects.create(latitude=33.33, longitude=33.33, height=3333)
         level1 = Levels.objects.create(**leveldata)
         level2 = Levels.objects.create(spring='', summer='2А', autumn='2Б', winter='')
         self.pereval1 = Pereval.objects.create(**perevaldata1, user=testuser1, coords=coords1, level=level1)
@@ -58,7 +53,6 @@ class SubmitDataTestCase(APITestCase):
                                           user=testuser2, coords=coords2, level=level2)
         self.pending_pereval = Pereval.objects.create(title='pereval3', beauty_title='pereval3', other_titles='pereval3',
                                           user=testuser1, coords=coords3, level=level1, status='pending')
-
         self.patch_data = {
             "beauty_title": "pereval0",
             "title": "pereval0",
@@ -69,22 +63,14 @@ class SubmitDataTestCase(APITestCase):
             "level": leveldata,
             "images": []
         }
-
         self.patch_user = {
             **perevaldata1,
             "connect": "",
-            "user": {
-                'email': 'testuser1@test.com',
-                'fam': 'test_patch',
-                'name': 'test_patch',
-                'otc': 'test_patch',
-                'phone': '22222222222'
-            },
+            "user": userdata2,
             "coords": coordsdata,
             "level": leveldata,
             "images": []
         }
-
         self.patch_pended = {
             "beauty_title": "pereval0",
             "title": "pereval0",
@@ -95,7 +81,6 @@ class SubmitDataTestCase(APITestCase):
             "level": leveldata,
             "images": []
         }
-
 
     def test_get_object_list(self):
 
@@ -126,23 +111,21 @@ class SubmitDataTestCase(APITestCase):
         url = reverse('pereval-detail', args=(self.pereval1.id,))
         response = self.client.patch(url, self.patch_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['message'], 'Успешно отправлено.')
-        self.assertIsNotNone(response.data['id'])
-
+        self.assertEqual(response.data['message'], 'Успешно изменено.')
+        self.assertEqual(response.data['state'], 1)
 
     def test_patch_object_user(self):
 
         url = reverse('pereval-detail', args=(self.pereval1.id,))
         response = self.client.patch(url, self.patch_user, format='json')
-        print(response.data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['message'], 'Статус запрещает изменение')
-        self.assertIsNotNone(response.data['id'])
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data['message']['non_field_errors'][0], 'Изменять данные пользователя запрещено.')
+        self.assertEqual(response.data['state'], 0)
 
     def test_patch_pending_object(self):
+
         url = reverse('pereval-detail', args=(self.pending_pereval.id,))
         response = self.client.patch(url, self.patch_pended, format='json')
-        print(response.data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['message'], 'Успешно отправлено.')
-        self.assertIsNotNone(response.data['id'])
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data['message'], 'Статус запрещает изменение')
+        self.assertEqual(response.data['state'], 0)
