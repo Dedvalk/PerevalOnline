@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
     'PerevalApp.apps.PerevalappConfig',
     'rest_framework',
+    'drf_yasg',
 ]
 
 REST_FRAMEWORK = {
