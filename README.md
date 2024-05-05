@@ -95,3 +95,6 @@ ___
     - **1** — если успешно удалось отредактировать запись в базе данных.
     - **0** — в противном случае.
 - **message** — содержит причину, по которой обновление невозможно.
+___
+Спецификация: https://ddvalk.pythonanywhere.com/api/v1/
+Swagger: https://ddvalk.pythonanywhere.com/swagger/
