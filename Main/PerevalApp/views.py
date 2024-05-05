@@ -23,27 +23,24 @@ class PerevalViewset(viewsets.ModelViewSet):
             serializer.is_valid(raise_exception=True)
             instance = serializer.save()
             response_data = {
-                'status': status.HTTP_200_OK,
                 'message': 'Успешно отправлено.',
                 'id': instance.id
             }
-            return Response(response_data)
+            return Response(response_data, status=status.HTTP_200_OK)
 
         except ValidationError as e:
             response_data = {
-                'status': status.HTTP_400_BAD_REQUEST,
                 'message': e.detail,
                 'id': None
             }
-            return Response(response_data)
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
             response_data = {
-                'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
                 'message': str(e),
                 'id': None
             }
-            return Response(response_data)
+            return Response(response_data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
     def partial_update(self, request, *args, **kwargs):
@@ -55,26 +52,24 @@ class PerevalViewset(viewsets.ModelViewSet):
                 serializer.is_valid(raise_exception=True)
                 serializer.save()
                 response_data = {
-                    'status': status.HTTP_200_OK,
                     'message': 'Успешно изменено.',
                     'state': 1
                 }
-                return Response(response_data)
+                return Response(response_data, status=status.HTTP_200_OK)
 
             except ValidationError as e:
                 response_data = {
-                    'status': status.HTTP_400_BAD_REQUEST,
                     'message': e.detail,
                     'state': 0
                 }
-                return Response(response_data)
+                return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
         else:
             response_data = {
                 'message': 'Статус запрещает изменение',
                 'state': 0
             }
-            return Response(response_data)
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
 class CoordsViewSet(viewsets.ModelViewSet):
 
