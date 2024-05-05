@@ -1,5 +1,4 @@
 from rest_framework import viewsets, status
-from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from .models import Pereval, Coords
@@ -11,6 +10,7 @@ class PerevalViewset(viewsets.ModelViewSet):
 
     queryset = Pereval.objects.all()
     serializer_class = PerevalSerializer
+    http_method_names = ['get', 'post', 'patch']
     filter_backends = (rest_framework.DjangoFilterBackend,)
     filterset_fields = [
         'user__email'
